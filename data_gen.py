@@ -5,7 +5,7 @@ import os
 from config import COMPANY_SIZE_MAP, INDUSTRY_MAP
 
 RANDOM_SEED=42
-N_SAMPLES=5000
+N_SAMPLES=5_000
 
 def generate_leads(n: int = N_SAMPLES, seed: int = RANDOM_SEED) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
