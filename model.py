@@ -11,14 +11,14 @@ from config import MODEL_PATH, FEATURE_COLS, COMPANY_SIZE_MAP, INDUSTRY_MAP
 from data_gen import generate_leads
 
 def feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
-    out=df.copy()
-    out["company_size_enc"]=out["company_size_enc"].map(COMPANY_SIZE_MAP).fillna(0)
-    out["industry_enc"]=out["industry_enc"].map(INDUSTRY_MAP).fillna(8)
+    out = df.copy()
+    out["company_size_enc"]    = out["company_size"].map(COMPANY_SIZE_MAP).fillna(0).astype(int)
+    out["industry_enc"]        = out["industry"].map(INDUSTRY_MAP).fillna(8).astype(int)
     out["monthly_traffic_log"] = np.log1p(out["monthly_traffic"])
-    out["demo_requested"]     = out["demo_requested"].astype(int)
+    out["demo_requested"]      = out["demo_requested"].astype(int)
     return out
 
-def train(n_samples: int =5_000) -> GradientBoostingRegressor:
+def train(n_samples: int =5000) -> GradientBoostingRegressor:
     print("Genearting Training data...")
     df= generate_leads(n=n_samples)
     df= feature_engineering(df)
@@ -57,6 +57,7 @@ def load_model() -> GradientBoostingRegressor:
         return pickle.load(f)
     
 
+# AFTER (fixed) — use a separate variable name
 def predict_score(
     company_size: str,
     industry: str,
@@ -67,21 +68,20 @@ def predict_score(
     demo_requested: bool,
     model=None,
 ) -> int:
-    """Return an integer score 0–100 for a single lead."""
     if model is None:
         model = load_model()
 
-        row = pd.DataFrame([{
-        "company_size":          company_size,
-        "industry":              industry,
-        "monthly_traffic":       monthly_traffic,
-        "pricing_visits":        pricing_visits,
-        "email_opens":           email_opens,
-        "days_since_engagement": days_since_engagement,
-        "demo_requested":        int(demo_requested),
+    input_df = pd.DataFrame([{
+        "company_size":           company_size,
+        "industry":               industry,
+        "monthly_traffic":        monthly_traffic,
+        "pricing_visits":         pricing_visits,
+        "email_opens":            email_opens,
+        "days_since_engagement":  days_since_engagement,
+        "demo_requested":         int(demo_requested),
     }])
-    row = feature_engineering(row)
-    raw = model.predict(row[FEATURE_COLS])[0]
+    engineered = feature_engineering(input_df)
+    raw = model.predict(engineered[FEATURE_COLS])[0]
     return int(np.clip(round(raw), 0, 100))
 
 def score_dataframe(df: pd.DataFrame, model=None) -> pd.DataFrame:

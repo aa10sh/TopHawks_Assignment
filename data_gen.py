@@ -5,7 +5,7 @@ import os
 from config import COMPANY_SIZE_MAP, INDUSTRY_MAP
 
 RANDOM_SEED=42
-N_SAMPLES=5_000
+N_SAMPLES=5000
 
 def generate_leads(n: int = N_SAMPLES, seed: int = RANDOM_SEED) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
@@ -25,6 +25,8 @@ def generate_leads(n: int = N_SAMPLES, seed: int = RANDOM_SEED) -> pd.DataFrame:
     })
 
     # ── Deterministic score used as training label (0–100) ───────────────────
+
+    noise = rng.normal(0, 3, n) 
     size_score    = df["company_size"].map(COMPANY_SIZE_MAP) / 5 * 20        # 0–20
     traffic_score = np.log1p(df["monthly_traffic"]) / np.log1p(500_000) * 15 # 0–15
     visit_score   = np.clip(df["pricing_visits"] / 10, 0, 1) * 25            # 0–25

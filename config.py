@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY", "")
-OPEN_AI_MODEL="gpt-4o-mini"
-
+OPENAI_MODEL   = "gpt-4o-mini" 
+print("KEY LOADED:", os.getenv("OPENAI_API_KEY", "NOT FOUND")[:12] + "...")
 MODEL_PATH = "model/lead_scorer.pkl"
 
 HOT_THRESHOLD=70
