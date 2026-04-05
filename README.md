@@ -21,7 +21,7 @@
 ---
 
 ## Live Streamlit Link:
- [[Add your deployed link here](https://tophawksassignment-myjtwwt6tauvbjunkvckxd.streamlit.app/)]
+ [[Click here for demo](https://tophawksassignment-myjtwwt6tauvbjunkvckxd.streamlit.app/)]
 
 ## 🧠 What It Does
 
